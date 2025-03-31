@@ -3,8 +3,22 @@ import { geolocation, ipAddress } from '@vercel/functions';
 export function GET(request: Request) {
     const details = geolocation(request);
     const ip = ipAddress(request) || "unknown";
-    return Response.json({ ...details, ip });
-    // return new Response(`<h1>Your location is ${city}</h1>`, {
-    //     headers: { 'content-type': 'text/html' },
-    // });
+    return new Response(JSON.stringify({ ...details, ip }), {
+        headers: {
+            'content-type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type'
+        },
+    });
+}
+
+export function OPTIONS() {
+    return new Response(null, {
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type'
+        }
+    });
 }
